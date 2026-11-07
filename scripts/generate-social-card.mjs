@@ -1,0 +1,29 @@
+import { writeFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import sharp from "sharp";
+import { siteConfig } from "../src/config.ts";
+
+// Personal text comes from the same config as the page. Escape XML before
+// inserting it into the original artwork so content edits cannot break the SVG.
+function escapeXml(value) {
+  const entities = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&apos;",
+  };
+  return String(value).replace(/[&<>"']/g, (character) => entities[character]);
+}
+
+const wordmark = siteConfig.wordmark.endsWith(".")
+  ? `${escapeXml(siteConfig.wordmark.slice(0, -1))}<tspan fill="#8B5CF6">.</tspan>`
+  : escapeXml(siteConfig.wordmark);
+const name = escapeXml(siteConfig.name);
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><defs><radialGradient id="g"><stop stop-color="#8B5CF6" stop-opacity=".24"/><stop offset="1" stop-color="#08080D" stop-opacity="0"/></radialGradient><linearGradient id="t" x2="0" y2="1"><stop stop-color="#F5F3FF"/><stop offset="1" stop-color="#C4B5FD"/></linearGradient></defs><rect width="1200" height="630" fill="#08080D"/><ellipse cx="600" cy="410" rx="620" ry="380" fill="url(#g)"/><rect x="30" y="30" width="1140" height="570" rx="4" fill="none" stroke="#C4B5FD" stroke-opacity=".16"/><path d="M80 100H1120M80 525H1120" stroke="#C4B5FD" stroke-opacity=".16"/><text x="80" y="78" fill="#F5F3FF" font-family="monospace" font-size="28" font-weight="700">${wordmark}</text><text x="80" y="265" fill="#C4B5FD" font-family="monospace" font-size="18" letter-spacing="6">A PERSONAL SPACE</text><text x="72" y="370" fill="url(#t)" font-family="monospace" font-size="140" font-weight="700" letter-spacing="-7">PORTFOLIO</text><text x="80" y="472" fill="#F5F3FF" font-family="monospace" font-size="25">${name}</text><path d="m1040 465 20-20 20 20-20 20Z" fill="none" stroke="#8B5CF6"/><circle cx="1060" cy="465" r="45" fill="none" stroke="#8B5CF6" stroke-opacity=".35"/></svg>\n`;
+
+await writeFile(new URL("../public/social-card.svg", import.meta.url), svg);
+await sharp(Buffer.from(svg))
+  .resize(1200, 630)
+  .png()
+  .toFile(fileURLToPath(new URL("../public/social-card.png", import.meta.url)));

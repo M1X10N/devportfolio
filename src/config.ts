@@ -1,92 +1,63 @@
+/**
+ * All personal content lives here. Add entries to `projects` or `achievements`
+ * to replace that section's “Coming soon” state. Optional links may be omitted.
+ * Keep factual claims and contact details accurate when editing this file.
+ */
+export interface PortfolioEntry {
+  title: string;
+  description: string;
+  url?: string;
+  tags?: string[];
+}
+
+export const sections = [
+  { id: "introduction", title: "Introduction", icon: "user" },
+  { id: "about", title: "About Me", icon: "fingerprint" },
+  { id: "achievements", title: "Achievements", icon: "award" },
+  { id: "projects", title: "Projects", icon: "layers" },
+  { id: "learning", title: "Currently Learning", icon: "shield" },
+  { id: "contact", title: "Contact", icon: "mail" },
+] as const;
+
+export type SectionId = (typeof sections)[number]["id"];
+
 export const siteConfig = {
-  name: "Ryan Fitzgerald",
-  title: "Senior Software Engineer",
-  description: "Portfolio website of Ryan Fitzgerald",
-  accentColor: "#1d4ed8",
-  social: {
-    email: "your-email@example.com",
-    linkedin: "https://linkedin.com/in/yourprofile",
-    twitter: "https://x.com/rfitzio",
-    github: "https://github.com/RyanFitzgerald",
-  },
+  name: "Mohammed Siraj uddin",
+  wordmark: "SIRAJ.",
+  title: "Siraj — Personal Portfolio",
+  description:
+    "The personal portfolio of Mohammed Siraj uddin. Explore what Siraj is learning, creating, and achieving in coding and cybersecurity.",
+  accentColor: "#8B5CF6",
+  introduction:
+    "Hi everyone, I’m Siraj! I’m a vibecoder who started coding out of personal interest and got into turning ideas into websites. I enjoy experimenting, figuring things out, and learning as I build. I game on the side, and I’m interested in making money and turning my skills into opportunities. This portfolio is where I’ll share what I’m learning, creating, and achieving along the way.",
   aboutMe:
-    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem quos asperiores nihil consequatur tempore cupiditate architecto natus commodi corrupti quas quasi facere est, dignissimos odit nam veniam sapiente ut, vitae eligendi ipsum dolor, nostrum ullam impedit! Corrupti ratione mollitia temporibus necessitatibus, consectetur reiciendis recusandae id, dolorum quaerat, vero pariatur. Ratione!",
-  skills: ["Javascript", "React", "Node.js", "Python", "AWS", "Docker"],
-  projects: [
+    "My interests include coding, gaming, and exploring cybersecurity. I enjoy learning by doing and finding ways to turn ideas into something useful.",
+  learningHeading: "Exploring the foundations of cybersecurity.",
+  learningTopics: [
     {
-      name: "AI Dev Roundup Newsletter",
+      title: "Networking Fundamentals",
       description:
-        "One concise email. Five minutes. Every Tuesday. Essential AI news & trends, production-ready libraries, powerful AI tools, and real-world code examples",
-      link: "https://aidevroundup.com/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
+        "Learning how devices connect and communicate, including IP addresses, DNS, ports, and common protocols.",
     },
     {
-      name: "Chrome Extension Mastery: Build Full-Stack Extensions with React & Node.js",
+      title: "Linux Fundamentals",
       description:
-        "Master the art of building production-ready, full-stack Chrome Extensions using modern web technologies and best practices",
-      link: "https://fullstackextensions.com/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
+        "Exploring the terminal, file systems, permissions, and basic system commands.",
     },
     {
-      name: "ExtensionKit",
+      title: "Web Security",
       description:
-        "Kit to jump-start your Chrome extension projects with a variety of battle-tested starter templates & examples",
-      link: "https://extensionkit.io/?ref=devportfolio",
-      skills: ["React", "Node.js", "AWS"],
+        "Learning about authentication, common web vulnerabilities, and ways to protect websites.",
     },
   ],
-  experience: [
-    {
-      company: "Tech Company",
-      title: "Senior Software Engineer",
-      dateRange: "Jan 2022 - Present",
-      bullets: [
-        "Led development of microservices architecture serving 1M+ users",
-        "Reduced API response times by 40% through optimization",
-        "Mentored team of 5 junior developers",
-      ],
+  social: {
+    email: "sirajhamza491@gmail.com",
+    instagram: {
+      handle: "@wv.sir4j",
+      url: "https://www.instagram.com/wv.sir4j/",
     },
-    {
-      company: "Startup Inc",
-      title: "Full Stack Developer",
-      dateRange: "Jun 2020 - Dec 2021",
-      bullets: [
-        "Built and launched MVP product from scratch using React and Node.js",
-        "Implemented CI/CD pipeline reducing deployment time by 60%",
-        "Collaborated with product team to define technical requirements",
-      ],
-    },
-    {
-      company: "Digital Agency",
-      title: "Frontend Developer",
-      dateRange: "Aug 2018 - May 2020",
-      bullets: [
-        "Developed responsive web applications for 20+ clients",
-        "Improved site performance scores by 35% on average",
-        "Introduced modern JavaScript frameworks to legacy codebases",
-      ],
-    },
-  ],
-  education: [
-    {
-      school: "University Name",
-      degree: "Bachelor of Science in Computer Science",
-      dateRange: "2014 - 2018",
-      achievements: [
-        "Graduated Magna Cum Laude with 3.8 GPA",
-        "Dean's List all semesters",
-        "President of Computer Science Club",
-      ],
-    },
-    {
-      school: "Online Platform",
-      degree: "Full Stack Development Certificate",
-      dateRange: "2019",
-      achievements: [
-        "Completed 500+ hours of coursework",
-        "Built 10+ portfolio projects",
-        "Specialized in React and Node.js",
-      ],
-    },
-  ],
+  },
+  emptyState: "Coming soon",
+  projects: [] as PortfolioEntry[],
+  achievements: [] as PortfolioEntry[],
 };

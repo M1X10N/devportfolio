@@ -1,39 +1,247 @@
 ---
-import Header from "../components/Header.astro";
-import Hero from "../components/Hero.astro";
-import About from "../components/About.astro";
-import Projects from "../components/Projects.astro";
-import Experience from "../components/Experience.astro";
-import Education from "../components/Education.astro";
-import Footer from "../components/Footer.astro";
-import { siteConfig } from "../config";
+import Icon from "../components/Icon.astro";
+import SectionDialogs from "../components/SectionDialogs.astro";
+import { siteConfig, sections } from "../config";
 import "../styles/global.css";
+const year = new Date().getFullYear();
+const base = import.meta.env.BASE_URL;
+const canonicalUrl = Astro.site ? new URL(base, Astro.site).href : undefined;
+const socialImage = canonicalUrl
+  ? new URL("social-card.png", canonicalUrl).href
+  : `${base}social-card.png`;
 ---
 
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={siteConfig.description} />
+    <meta name="theme-color" content="#08080D" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={siteConfig.title} />
+    <meta property="og:description" content={siteConfig.description} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    <meta property="og:image:alt" content={`${siteConfig.name} — Portfolio`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={siteConfig.title} />
+    <meta name="twitter:description" content={siteConfig.description} />
+    <meta name="twitter:image" content={socialImage} />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <title>{siteConfig.name} - {siteConfig.title}</title>
+    <title>{siteConfig.title}</title>
   </head>
-  <body>
-    <Header />
-    <section>
-      <Hero />
-      <About />
-      <Projects />
-      <Experience />
-      <Education />
-    </section>
-    <Footer />
+  <body style={`--violet: ${siteConfig.accentColor}`}>
+    <a class="skip-link" href="#explore">
+      Skip to portfolio
+    </a>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="wordmark" href="#" aria-label={`${siteConfig.wordmark} home`}>
+          {siteConfig.wordmark.slice(0, -1)}
+          <span>{siteConfig.wordmark.slice(-1)}</span>
+        </a>
+        <div class="header-actions">
+          <details id="section-menu" class="section-menu">
+            <summary>
+              Explore <Icon name="chevron-down" size={14} />
+            </summary>
+            <nav aria-label="Portfolio sections">
+              {sections.map((section) => (
+                <button
+                  type="button"
+                  data-open-section={section.id}
+                  aria-haspopup="dialog"
+                  aria-controls={`section-${section.id}`}
+                >
+                  <Icon name={section.icon} size={18} />
+                  {section.title}
+                  <Icon name="arrow-up-right" size={14} />
+                </button>
+              ))}
+            </nav>
+          </details>
+          <button
+            class="contact-button"
+            type="button"
+            data-open-section="contact"
+            aria-haspopup="dialog"
+            aria-controls="section-contact"
+          >
+            Let’s connect <Icon name="arrow-up-right" size={16} />
+          </button>
+        </div>
+      </header>
+      <main id="explore" class="portfolio" data-carousel>
+        <div class="hero-copy">
+          <p class="eyebrow hero-eyebrow">
+            <span class="status-dot" aria-hidden="true"></span>A SPACE FOR IDEAS
+            &amp; CURIOSITY
+          </p>
+          <h1>
+            PORTFOLIO
+            <span class="title-period" aria-hidden="true">
+              .
+            </span>
+          </h1>
+          <p class="hero-caption">Six chapters. One unfolding journey.</p>
+        </div>
+        <div class="carousel-composition">
+          <div class="composition-label label-left" aria-hidden="true">
+            <span>01 — 06</span>
+            <span>EXPLORE THE ORBIT</span>
+          </div>
+          <div class="composition-label label-right" aria-hidden="true">
+            <span>PERSONAL</span>
+            <span>PORTFOLIO / {siteConfig.wordmark.replace(/\.$/, "")}</span>
+          </div>
+          <div class="orbit-floor" aria-hidden="true">
+            <div></div>
+            <span></span>
+          </div>
+          <div
+            class="carousel-stage"
+            data-carousel-stage
+            role="group"
+            aria-roledescription="carousel"
+            aria-label="Portfolio sections. Use left and right arrow keys to rotate."
+            tabindex="0"
+          >
+            <div class="carousel-ring" data-carousel-ring>
+              {sections.map((section, index) => (
+                <button
+                  type="button"
+                  class:list={["section-card", { "is-active": index === 0 }]}
+                  style={`--card-angle: ${index * 60}deg; --offset: ${index};`}
+                  data-section={section.id}
+                  data-card-index={index}
+                  aria-haspopup="dialog"
+                  aria-controls={`section-${section.id}`}
+                  aria-current={index === 0 ? "true" : undefined}
+                >
+                  <span class="card-face">
+                    <span class="card-icon">
+                      <Icon name={section.icon} size={34} />
+                    </span>
+                    <span class="card-title">{section.title}</span>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div class="carousel-navigation" aria-label="Carousel controls">
+          <button
+            class="round-button"
+            type="button"
+            data-previous
+            aria-label="Previous section"
+          >
+            <Icon name="arrow-left" size={19} />
+          </button>
+          <div
+            class="position-indicators"
+            role="group"
+            aria-label="Choose carousel position"
+          >
+            {sections.map((section, index) => (
+              <button
+                type="button"
+                class="position-indicator"
+                data-position={index}
+                aria-label={`Rotate to ${section.title}`}
+                aria-current={index === 0 ? "true" : undefined}
+              >
+                <span></span>
+              </button>
+            ))}
+          </div>
+          <button
+            class="round-button"
+            type="button"
+            data-next
+            aria-label="Next section"
+          >
+            <Icon name="arrow-right" size={19} />
+          </button>
+        </div>
+        <p
+          class="carousel-status sr-only"
+          data-carousel-status
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          Introduction · 1 of 6
+        </p>
+        <p class="interaction-hint">
+          Drag to rotate <span aria-hidden="true">·</span> Click to open
+        </p>
+        <noscript>
+          <p class="noscript-message">
+            JavaScript is off. Read each section below.
+          </p>
+        </noscript>
+      </main>
+      <footer class="site-footer">
+        <span>
+          © {year} {siteConfig.name}
+        </span>
+        <span class="footer-note">
+          <span class="footer-spark" aria-hidden="true">
+            ✳
+          </span>{" "}
+          ALWAYS A WORK IN PROGRESS
+        </span>
+        <a
+          href={`mailto:${siteConfig.social.email}`}
+          aria-label={`Email ${siteConfig.name}`}
+        >
+          Say hello <Icon name="arrow-up-right" size={14} />
+        </a>
+      </footer>
+    </div>
+    <SectionDialogs />
+    <noscript>
+      <style>
+        .section-dialog:not([open]) {
+          display: block;
+          position: relative;
+          inset: auto;
+          margin: 24px auto;
+          max-width: calc(100% - 32px);
+        }
+        .dialog-close,
+        .carousel-composition,
+        .carousel-navigation,
+        .interaction-hint,
+        .header-actions {
+          display: none;
+        }
+        .portfolio {
+          padding-bottom: 30px;
+        }
+        .dialog-scroll {
+          max-height: none;
+        }
+        .section-dialog {
+          opacity: 1;
+          transform: none;
+        }
+      </style>
+    </noscript>
+    <script>
+      import { initPortfolio } from "../scripts/portfolio";
+      initPortfolio();
+    </script>
   </body>
 </html>
