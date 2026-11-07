@@ -68,6 +68,7 @@ function fixture({ reducedMotion = false } = {}) {
     document,
     cards,
     stage,
+    teardown: cleanup,
     active: () =>
       cards.findIndex((card) => card.getAttribute("aria-current") === "true"),
     click: (element) =>
@@ -495,4 +496,153 @@ test("ring geometry keeps panel yaw readable and removes rear face flipping", as
       /A SPACE FOR IDEAS|Six chapters|EXPLORE THE ORBIT/,
     );
   });
+});
+
+test("typewriter keeps full accessible text and headings visible, progresses, and Show all skips", async () => {
+  await withFixture({}, async (page) => {
+    const dialog = page.document.getElementById("section-introduction");
+    const paragraph = dialog.querySelector("[data-typewriter]");
+    const fullText = paragraph.textContent;
+    page.click(page.cards[0]);
+    assert.equal(dialog.open, true);
+    assert.equal(dialog.querySelector("h2").textContent, "Introduction");
+    assert.equal(
+      page.document.activeElement,
+      dialog.querySelector("[data-close-dialog]"),
+    );
+    assert.equal(
+      paragraph.querySelector("[data-typewriter-source]").textContent,
+      fullText,
+    );
+    assert.equal(
+      paragraph
+        .querySelector("[data-typewriter-visual]")
+        .getAttribute("aria-hidden"),
+      "true",
+    );
+    assert.equal(
+      paragraph.querySelector("[data-typewriter-visual]").textContent,
+      "",
+    );
+    assert.equal(
+      dialog.querySelector("[aria-live]"),
+      null,
+      "no character-by-character announcements",
+    );
+    await delay(130);
+    const partial = paragraph.querySelector(
+      "[data-typewriter-visual]",
+    ).textContent;
+    assert.ok(partial.length > 0 && partial.length < fullText.length);
+    const show = dialog.querySelector("[data-show-all]");
+    assert.equal(show.hidden, false);
+    show.focus();
+    page.click(show);
+    assert.equal(paragraph.textContent, fullText);
+    assert.equal(dialog.hasAttribute("data-typing"), false);
+    assert.equal(page.document.activeElement, show);
+    await delay(100);
+    assert.equal(paragraph.textContent, fullText, "no restart after skipping");
+  });
+});
+
+test("typewriter stops on close, resets on reopening, and responds to reduced motion", async () => {
+  await withFixture({}, async (page) => {
+    const dialog = page.document.getElementById("section-about");
+    const paragraph = dialog.querySelector("[data-typewriter]");
+    const fullText = paragraph.textContent;
+    page.click(page.cards[1]);
+    await delay(80);
+    page.click(dialog.querySelector("[data-close-dialog]"));
+    await eventually(() => assert.equal(dialog.open, false));
+    assert.equal(paragraph.textContent, fullText);
+    page.click(page.cards[1]);
+    assert.equal(
+      paragraph.querySelector("[data-typewriter-visual]").textContent,
+      "",
+    );
+    const show = dialog.querySelector("[data-show-all]");
+    show.focus();
+    page.setReducedMotion(true);
+    assert.equal(paragraph.textContent, fullText);
+    assert.equal(show.hidden, true);
+    assert.equal(
+      page.document.activeElement,
+      dialog.querySelector("[data-close-dialog]"),
+    );
+    await delay(100);
+    assert.equal(paragraph.querySelector("[data-typewriter-visual]"), null);
+  });
+});
+
+test("contact links and reduced-motion text are immediate and never typed", async () => {
+  await withFixture({}, (page) => {
+    page.click(page.cards[5]);
+    const contact = page.document.getElementById("section-contact");
+    assert.equal(contact.querySelector("[data-show-all]").hidden, true);
+    assert.equal(contact.hasAttribute("data-typing"), false);
+    assert.equal(
+      contact.querySelectorAll("[data-typewriter-visual]").length,
+      0,
+    );
+    assert.equal(
+      contact.querySelector('a[href^="mailto:"]').getAttribute("href"),
+      "mailto:sirajhamza491@gmail.com",
+    );
+    assert.equal(
+      contact.querySelector('a[target="_blank"]').getAttribute("href"),
+      "https://www.instagram.com/wv.sir4j/",
+    );
+  });
+  await withFixture({ reducedMotion: true }, (page) => {
+    page.click(page.cards[4]);
+    const dialog = page.document.getElementById("section-learning");
+    assert.equal(dialog.querySelector("[data-show-all]").hidden, true);
+    assert.equal(dialog.querySelectorAll("[data-typewriter-visual]").length, 0);
+    assert.ok(dialog.querySelector("[data-typewriter]").textContent.length > 0);
+  });
+});
+
+test("short text finishes naturally without looping or restarting", async () => {
+  await withFixture({}, async (page) => {
+    page.click(page.cards[3]);
+    const dialog = page.document.getElementById("section-projects");
+    await delay(420);
+    assert.equal(dialog.hasAttribute("data-typing"), false);
+    assert.equal(
+      dialog.querySelector(".empty-state").textContent,
+      "Coming soon",
+    );
+    await delay(80);
+    assert.equal(dialog.querySelector("[data-typewriter-visual]"), null);
+  });
+});
+
+test("touch interaction disables hover until mouse input resumes on hybrid devices", async () => {
+  await withFixture({}, (page) => {
+    const carousel = page.document.querySelector("[data-carousel]");
+    page.pointer(page.cards[0], "pointerdown", 100, 100, "touch");
+    assert.equal(carousel.classList.contains("is-touch-input"), true);
+    page.pointer(page.stage, "pointerup", 100, 100, "touch");
+    assert.equal(carousel.classList.contains("is-touch-input"), true);
+    page.pointer(page.stage, "pointermove", 110, 100, "mouse");
+    assert.equal(carousel.classList.contains("is-touch-input"), false);
+  });
+});
+
+test("teardown cancels typing and restores the complete text", async () => {
+  const page = fixture();
+  try {
+    const dialog = page.document.getElementById("section-introduction");
+    const paragraph = dialog.querySelector("[data-typewriter]");
+    const fullText = paragraph.textContent;
+    page.click(page.cards[0]);
+    assert.equal(dialog.hasAttribute("data-typing"), true);
+    page.teardown();
+    await delay(80);
+    assert.equal(paragraph.textContent, fullText);
+    assert.equal(paragraph.querySelector("[data-typewriter-visual]"), null);
+  } finally {
+    await page.dispose();
+  }
 });

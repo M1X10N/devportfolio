@@ -15,15 +15,20 @@ import Icon from "./Icon.astro";
         <span class="eyebrow">
           SECTION {String(index + 1).padStart(2, "0")} / 06
         </span>
-        <button
-          type="button"
-          class="dialog-close"
-          data-close-dialog
-          aria-label={`Close ${section.title}`}
-          autofocus
-        >
-          <Icon name="close" size={22} />
-        </button>
+        <div class="dialog-tools">
+          <button type="button" class="show-all-button" data-show-all hidden>
+            Show all
+          </button>
+          <button
+            type="button"
+            class="dialog-close"
+            data-close-dialog
+            aria-label={`Close ${section.title}`}
+            autofocus
+          >
+            <Icon name="close" size={22} />
+          </button>
+        </div>
       </div>
       <div class="dialog-scroll" tabindex="0">
         <div class="dialog-heading">
@@ -36,18 +41,24 @@ import Icon from "./Icon.astro";
         {section.id === "introduction" && (
           <div class="section-content">
             <p class="dialog-name">{siteConfig.name}</p>
-            <p class="dialog-prose">{siteConfig.introduction}</p>
+            <p class="dialog-prose" data-typewriter>
+              {siteConfig.introduction}
+            </p>
           </div>
         )}
         {section.id === "about" && (
           <div class="section-content">
-            <p class="dialog-prose">{siteConfig.aboutMe}</p>
+            <p class="dialog-prose" data-typewriter>
+              {siteConfig.aboutMe}
+            </p>
           </div>
         )}
         {(section.id === "projects" || section.id === "achievements") && (
           <div class="section-content">
             {siteConfig[section.id].length === 0 ? (
-              <p class="empty-state">{siteConfig.emptyState}</p>
+              <p class="empty-state" data-typewriter>
+                {siteConfig.emptyState}
+              </p>
             ) : (
               <div class="entry-list">
                 {siteConfig[section.id].map((entry) => (
@@ -66,7 +77,7 @@ import Icon from "./Icon.astro";
                         entry.title
                       )}
                     </h3>
-                    <p>{entry.description}</p>
+                    <p data-typewriter>{entry.description}</p>
                     {entry.tags && entry.tags.length > 0 && (
                       <ul class="entry-tags" aria-label="Topics">
                         {entry.tags.map((tag) => (
@@ -82,7 +93,9 @@ import Icon from "./Icon.astro";
         )}
         {section.id === "learning" && (
           <div class="section-content">
-            <p class="learning-intro">{siteConfig.learningHeading}</p>
+            <p class="learning-intro" data-typewriter>
+              {siteConfig.learningHeading}
+            </p>
             <div class="learning-list">
               {siteConfig.learningTopics.map((topic, topicIndex) => (
                 <article class="learning-topic reveal">
@@ -91,7 +104,7 @@ import Icon from "./Icon.astro";
                   </span>
                   <div>
                     <h3>{topic.title}</h3>
-                    <p>{topic.description}</p>
+                    <p data-typewriter>{topic.description}</p>
                   </div>
                 </article>
               ))}

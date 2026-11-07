@@ -101,3 +101,9 @@ Configure the hosting service’s install command as `npm ci`, build command as 
 ## Licence
 
 This project retains the original MIT licence and Ryan Fitzgerald’s copyright notice in **`LICENSE.md`**. Preserve that notice when redistributing the source or substantial portions of it.
+
+## Glass and text effects
+
+Fine-pointer hover lifts a card 10px using the independent CSS `translate` property, preserving its 3D carousel transform. Hover is disabled during dragging, modal dialogs, touch-only input, and reduced motion. Smoked charcoal uses 32px backdrop blur and 120% saturation, with an opaque gradient fallback.
+
+Dialog body paragraphs type once per opening at about 40 characters per second. Headings, the close control, and contact links appear immediately. **Show all** skips typing without losing focus; the full paragraphs remain available to screen readers through a static accessible copy. Typing stops on close or teardown and finishes immediately if reduced motion is enabled. Space for the full text is reserved to avoid changing dialog height while typing.

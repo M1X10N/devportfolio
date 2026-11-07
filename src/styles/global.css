@@ -226,8 +226,8 @@ h1 {
   margin: -87px 0 0 -135px;
   transform-style: preserve-3d;
 }
-/* A solid charcoal backing blocks rear labels; the reflective film above it
-   supplies controlled transparency and frost without fading the whole panel. */
+/* High charcoal opacity plus strong backdrop blur diffuses rear lettering.
+   Reflective film stays separate from the crisp, unfiltered labels. */
 .section-card {
   position: absolute;
   inset: 0;
@@ -236,8 +236,11 @@ h1 {
   padding: 0;
   border-radius: 18px;
   border: 1px solid #faf7f085;
-  background: #242424;
+  background: rgb(36 36 36 / 0.82);
+  backdrop-filter: blur(32px) saturate(120%);
+  -webkit-backdrop-filter: blur(32px) saturate(120%);
   color: #faf7f0;
+  translate: 0 var(--hover-lift, 0px);
   transform: translate3d(
       calc(var(--ring-x, 0) * var(--radius)),
       calc(var(--depth, 1) * var(--ring-rise)),
@@ -252,7 +255,8 @@ h1 {
   -webkit-user-select: none;
   transition:
     transform 0.55s cubic-bezier(0.22, 0.7, 0.16, 1),
-    border-color 0.2s,
+    translate 0.25s ease,
+    border-color 0.25s,
     box-shadow 0.2s;
 }
 .section-card::before {
@@ -265,15 +269,29 @@ h1 {
     linear-gradient(135deg, #faf7f03a, transparent 38%),
     radial-gradient(ellipse at 100% 90%, #d95d392e, transparent 70%),
     linear-gradient(160deg, #faf7f00a, #24242480);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    inset 0 1px 0 #faf7f070,
+    inset 0 -1px 0 #faf7f020;
 }
 .section-card:hover {
   opacity: 1;
-  border-color: #faf7f0c9;
-  box-shadow:
-    0 18px 30px #37251933,
-    inset 0 1px 0 #faf7f0a0;
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html:not(.dialog-open)
+    .portfolio:not(.is-dragging):not(.is-touch-input)
+    .section-card:hover {
+    --hover-lift: -10px;
+    border-color: #d95d39;
+    box-shadow:
+      0 26px 38px #37251945,
+      inset 0 1px 0 #faf7f0b0;
+  }
+  html:not(.dialog-open)
+    .portfolio:not(.is-dragging):not(.is-touch-input)
+    .section-card:hover
+    .card-face {
+    opacity: 0.94;
+  }
 }
 .section-card.is-active {
   border: 2px solid var(--accent);
@@ -298,9 +316,6 @@ h1 {
   backface-visibility: hidden;
   transition: opacity 0.2s;
 }
-.section-card:hover .card-face {
-  opacity: 0.92;
-}
 .card-icon {
   display: grid;
   place-items: center;
@@ -317,6 +332,7 @@ h1 {
   letter-spacing: -0.5px;
 }
 .is-dragging .section-card {
+  --hover-lift: 0px;
   cursor: grabbing;
   transition: none;
 }
@@ -954,4 +970,32 @@ h1 {
   .card-title {
     font-size: 15px;
   }
+}
+
+.dialog-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.show-all-button {
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid #faf7f050;
+  border-radius: 22px;
+  background: #faf7f00a;
+  color: #faf7f0;
+  font-size: 12px;
+}
+.show-all-button:hover {
+  background: #d95d3926;
+}
+.show-all-button[aria-disabled="true"] {
+  color: #d3cbc1;
+  cursor: default;
+}
+.show-all-button[hidden] {
+  display: none;
+}
+.typewriter-remainder {
+  visibility: hidden;
 }

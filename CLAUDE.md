@@ -25,6 +25,7 @@ Run relevant checks after changes. The DOM tests cannot establish that layout, n
 - `src/pages/index.astro`: the page document, metadata, header, carousel controls, compact section menu, and dialog composition.
 - `src/components/SectionDialogs.astro`: server-rendered content for the six native dialogs.
 - `src/components/Icon.astro`: lightweight SVG line icons.
+- `src/scripts/typewriter.ts`: visual-only dialog typing with a complete accessible source, Show all, and cancellable timers.
 - `src/scripts/portfolio.ts`: carousel selection, pointer/keyboard input, dialog lifecycle, focus restoration, and reduced-motion handling.
 - `src/styles/global.css`: the ivory-and-burnt-orange palette, typography, glass surfaces, 3D layout, responsive mobile layout, focus states, and motion preferences.
 - `public/favicon.svg`: the favicon.

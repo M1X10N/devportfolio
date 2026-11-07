@@ -1,3 +1,5 @@
+import { createTypewriter } from "./typewriter.ts";
+
 /** Visitor-controlled navigation. Content itself stays in the server-rendered dialogs. */
 const mounted = new WeakMap<HTMLElement, () => void>();
 
@@ -26,6 +28,10 @@ export function initPortfolio(
   const motion = win.matchMedia?.("(prefers-reduced-motion: reduce)");
   const removers: (() => void)[] = [];
   const observers: IntersectionObserver[] = [];
+  const typing = new Map<
+    HTMLDialogElement,
+    ReturnType<typeof createTypewriter>
+  >();
   const count = cards.length;
   const angle = 360 / count;
   const stageLabel = stage.getAttribute("aria-label");
@@ -140,6 +146,18 @@ export function initPortfolio(
       if (stageDescription)
         stage!.setAttribute("aria-roledescription", stageDescription);
     }
+    if (reduced() && activeDialog) {
+      typing.get(activeDialog)?.finish();
+      const control =
+        activeDialog.querySelector<HTMLButtonElement>("[data-show-all]");
+      if (control) {
+        if (doc.activeElement === control)
+          activeDialog
+            .querySelector<HTMLElement>("[data-close-dialog]")
+            ?.focus();
+        control.hidden = true;
+      }
+    }
     paint();
   }
 
@@ -151,6 +169,7 @@ export function initPortfolio(
 
   function closeDialog(dialog: HTMLDialogElement) {
     if (!dialog.open || dialog.classList.contains("is-closing")) return;
+    typing.get(dialog)?.finish();
     if (reduced()) finishClose(dialog);
     else {
       dialog.classList.add("is-closing");
@@ -173,6 +192,7 @@ export function initPortfolio(
     if (menu) menu.open = false;
     dialog.classList.remove("is-closing");
     dialog.showModal();
+    typing.get(dialog)?.start(reduced());
     doc.documentElement.classList.add("dialog-open");
     trigger.setAttribute("aria-expanded", "true");
     const scroll = dialog.querySelector<HTMLElement>(".dialog-scroll");
@@ -220,6 +240,8 @@ export function initPortfolio(
   );
 
   on(stage, "pointerdown", ((event: PointerEvent) => {
+    // Hybrid touch/mouse devices may still report hover capability.
+    carousel.classList.toggle("is-touch-input", event.pointerType === "touch");
     if (
       event.button !== 0 ||
       event.isPrimary === false ||
@@ -242,6 +264,8 @@ export function initPortfolio(
     stage,
     "pointermove",
     ((event: PointerEvent) => {
+      if (event.pointerType === "mouse")
+        carousel.classList.remove("is-touch-input");
       if (!gesture || event.pointerId !== gesture.id || gesture.vertical)
         return;
       const dx = event.clientX - gesture.x;
@@ -333,6 +357,7 @@ export function initPortfolio(
   doc
     .querySelectorAll<HTMLDialogElement>("[data-section-dialog]")
     .forEach((dialog) => {
+      typing.set(dialog, createTypewriter(dialog, win));
       dialog
         .querySelectorAll<HTMLElement>("[data-close-dialog]")
         .forEach((button) => {
@@ -357,6 +382,7 @@ export function initPortfolio(
       on(dialog, "close", (() => {
         win!.clearTimeout(closeTimer);
         dialog.classList.remove("is-closing");
+        typing.get(dialog)?.finish();
         activeDialog = null;
         doc.documentElement.classList.remove("dialog-open");
         const restore = opener;
@@ -399,6 +425,7 @@ export function initPortfolio(
     win.clearTimeout(closeTimer);
     removers.forEach((remove) => remove());
     observers.forEach((observer) => observer.disconnect());
+    typing.forEach((effect) => effect.destroy());
     if (activeDialog?.open) activeDialog.close();
     doc.documentElement.classList.remove("dialog-open");
     delete carousel.dataset.enhanced;
