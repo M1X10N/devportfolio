@@ -18,7 +18,7 @@ const socialImage = canonicalUrl
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={siteConfig.description} />
-    <meta name="theme-color" content="#08070B" />
+    <meta name="theme-color" content="#F2EFE9" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={siteConfig.title} />
     <meta property="og:description" content={siteConfig.description} />
@@ -41,10 +41,28 @@ const socialImage = canonicalUrl
     />
     <title>{siteConfig.title}</title>
   </head>
-  <body style={`--violet: ${siteConfig.accentColor}`}>
+  <body style={`--accent: ${siteConfig.accentColor}`}>
     <a class="skip-link" href="#explore">
       Skip to portfolio
     </a>
+    <svg
+      class="background-curves"
+      viewBox="0 0 1440 760"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M-120 240 C160 80 290 430 560 330 S1000 0 1530 190 L1530 350 C1070 145 920 410 590 440 S110 215 -120 490Z"
+        fill="#D95D39"
+        fill-opacity=".14"
+      />
+      <path
+        d="M1190 -80 C1030 50 1100 190 950 285 S520 410 430 590 C750 370 1110 445 1450 300 L1520 -80Z"
+        fill="#D95D39"
+        fill-opacity=".1"
+      />
+    </svg>
     <div class="page-shell">
       <header class="site-header">
         <a class="wordmark" href="#" aria-label={`${siteConfig.wordmark} home`}>
@@ -84,12 +102,7 @@ const socialImage = canonicalUrl
       </header>
       <main id="explore" class="portfolio" data-carousel>
         <div class="hero-copy">
-          <h1>
-            PORTFOLIO
-            <span class="title-period" aria-hidden="true">
-              .
-            </span>
-          </h1>
+          <h1>PORTFOLIO</h1>
         </div>
         <div class="carousel-composition">
           <div class="orbit-floor" aria-hidden="true"></div>
@@ -124,6 +137,10 @@ const socialImage = canonicalUrl
             </div>
           </div>
         </div>
+        <p class="interaction-hint">
+          Scroll or drag to rotate <span aria-hidden="true">·</span> Click to
+          open
+        </p>
         <div class="carousel-navigation" aria-label="Carousel controls">
           <button
             class="round-button"
@@ -167,10 +184,7 @@ const socialImage = canonicalUrl
         >
           Introduction · 1 of 6
         </p>
-        <p class="interaction-hint">
-          Scroll or drag to rotate <span aria-hidden="true">·</span> Click to
-          open
-        </p>
+
         <noscript>
           <p class="noscript-message">
             JavaScript is off. Read each section below.

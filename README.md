@@ -1,6 +1,6 @@
 # Siraj’s portfolio
 
-A personal portfolio for Mohammed Siraj uddin, built with Astro, Tailwind CSS v4, TypeScript, and lightweight CSS 3D transforms and opaque charcoal panels. Six title-and-icon cards open the introduction, about, achievements, projects, learning, and contact sections in native glass dialogs.
+A personal portfolio for Mohammed Siraj uddin, built with Astro, Tailwind CSS v4, TypeScript, and lightweight CSS 3D transforms and charcoal-backed frosted glass panels. Six title-and-icon cards open the introduction, about, achievements, projects, learning, and contact sections in native glass dialogs.
 
 The desktop carousel rotates only when a visitor interacts with it. Mobile uses a simpler swipeable layout. Visitors who prefer reduced motion get a static section grid. A compact section menu provides another route to every dialog.
 
@@ -54,7 +54,7 @@ projects: [
 
 Use the same structure for `achievements`. Omit `url` and `tags` when unnecessary. Avoid adding unverified experience or qualifications.
 
-The palette, glass surfaces, layout, responsive rules, and motion settings are in **`src/styles/global.css`**. Original line icons are in **`src/components/Icon.astro`**. The favicon is **`public/favicon.svg`**. The sharing artwork is defined in **`scripts/generate-social-card.mjs`**, which reads the name and wordmark from the same config and generates **`public/social-card.svg`** and **`public/social-card.png`**. Content edits appear in the sharing image on the next `npm run build`; run `node scripts/generate-social-card.mjs` to regenerate it independently.
+The ivory/orange palette, charcoal-backed glass surfaces, layout, responsive rules, and motion settings are in **`src/styles/global.css`**. Original line icons are in **`src/components/Icon.astro`**. The favicon is **`public/favicon.svg`**. The sharing artwork is defined in **`scripts/generate-social-card.mjs`**, which reads the name and wordmark from the same config and generates **`public/social-card.svg`** and **`public/social-card.png`**. Content edits appear in the sharing image on the next `npm run build`; run `node scripts/generate-social-card.mjs` to regenerate it independently.
 
 ## Controls and accessibility
 

@@ -7,7 +7,7 @@ Read CLAUDE.md and README.md for the full architecture and workflow.
 - Use focused `.astro` components in `src/components/` and keep the document in `src/pages/index.astro`.
 - Keep personal content and section definitions in `src/config.ts`.
 - Keep interaction behavior in `src/scripts/portfolio.ts` and styles in `src/styles/global.css`. Custom CSS is appropriate for perspective, transforms, dialog transitions, and responsive layouts; Tailwind utilities are also available.
-- Use the existing SVG line-icon component and maintain the readable sans-serif, black-and-violet aesthetic.
+- Use the existing SVG line-icon component and maintain the readable sans-serif, ivory-and-burnt-orange aesthetic.
 
 ## Content and behavior
 - Keep the six sections: introduction, about, achievements, projects, learning, and contact. Match section IDs, dialog IDs, and interaction data attributes.

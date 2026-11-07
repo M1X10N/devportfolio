@@ -26,7 +26,7 @@ Run relevant checks after changes. The DOM tests cannot establish that layout, n
 - `src/components/SectionDialogs.astro`: server-rendered content for the six native dialogs.
 - `src/components/Icon.astro`: lightweight SVG line icons.
 - `src/scripts/portfolio.ts`: carousel selection, pointer/keyboard input, dialog lifecycle, focus restoration, and reduced-motion handling.
-- `src/styles/global.css`: the black-and-violet palette, typography, glass surfaces, 3D layout, responsive mobile layout, focus states, and motion preferences.
+- `src/styles/global.css`: the ivory-and-burnt-orange palette, typography, glass surfaces, 3D layout, responsive mobile layout, focus states, and motion preferences.
 - `public/favicon.svg`: the favicon.
 - `scripts/generate-social-card.mjs`: original sharing artwork, with escaped name and wordmark read from `src/config.ts`; generates `public/social-card.svg` and `public/social-card.png` before each build.
 - `tests/portfolio.test.mjs`: happy-dom tests for the built HTML and interaction script.
