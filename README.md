@@ -1,187 +1,109 @@
-<img width="1943" height="1093" alt="image" src="https://github.com/user-attachments/assets/cc2ff955-17c2-48c7-81c8-479a0f061850" />
+# Siraj’s portfolio
 
-# DevPortfolio Template
+A personal portfolio for Mohammed Siraj uddin, built with Astro, Tailwind CSS v4, TypeScript, and lightweight CSS 3D transforms and charcoal-backed frosted glass panels. Six title-and-icon cards open the introduction, about, achievements, projects, learning, and contact sections in native glass dialogs.
 
-A modern, minimalist portfolio template built with Astro and Tailwind CSS. Perfect for developers looking to showcase their skills, experience, and projects in a clean, professional way.
+The desktop carousel rotates only when a visitor interacts with it. Mobile uses a simpler swipeable layout. Visitors who prefer reduced motion get a static section grid. A compact section menu provides another route to every dialog.
 
-This was completely rebuilt from the ground up from V1. This template was built to be entirely ready to go with a quick config edit (see below) but also provides the ability to easily extend in whatever way you want.
+## Run locally
 
-This template also comes with `CLAUDE.md` and `.cursor/rules` files for easy integration with your existing AI workflows.
+Use Node.js **24.12 or newer in the Node 24 LTS line** and npm. The interaction tests import TypeScript directly through Node.
 
-> **📬 Connect & Share!**  
-> For questions and updates, feel free to reach out on [**X (Twitter)**](https://x.com/rfitzio).  
-> If you've built and published your personal site with this template, I'd love to see it! Send me a DM 🚀
-
-## Preview
-
-To view a live preview of the site, [click here](https://ryanfitzgerald.github.io/devportfolio/).
-
-## Built With
-
-- **[Astro](https://astro.build/)** - Static site generator for modern web apps
-- **[Tailwind CSS v4](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[Tabler Icons](https://tabler.io/icons)** - Free and open source icons
-- **TypeScript** - For type-safe configuration
-
-## Updating the Template
-
-### Configuration
-
-The template is designed to be easily customizable through the `src/config.ts` file. This single file controls:
-
-- **Personal Information**: Name, title, description
-- **Accent Color**: Primary color theme (changing this will change the accent color site wide)
-- **Social Links**: Email, LinkedIn, Twitter, GitHub (all optional)
-- **About Section**: Personal bio/description
-- **Skills**: List of technical skills
-- **Projects**: Project showcase with descriptions and links
-- **Experience**: Work history with bullet points
-- **Education**: Educational background and achievements
-
-If skills, projects, experience, or education are removed from the config, those sections will be hidden entirely.
-
-### Example structures
-
-Here's what the config data structure looks like for each section:
-
-#### Basic Information
-```typescript
-name: "Your Name",
-title: "Your Job Title",
-description: "Brief site description",
-accentColor: "#1d4ed8", // Hex color for theme
-```
-
-#### Social Links (all optional)
-```typescript
-social: {
-  email: "your-email@example.com",
-  linkedin: "https://linkedin.com/in/yourprofile",
-  twitter: "https://twitter.com/yourprofile", 
-  github: "https://github.com/yourusername",
-}
-```
-
-#### About Section
-```typescript
-aboutMe: "A paragraph describing yourself, your background, interests, and what you're passionate about. This appears in the About section of your portfolio."
-```
-
-#### Skills
-```typescript
-skills: ["JavaScript", "React", "Node.js", "Python", "AWS", "Docker"]
-```
-
-#### Projects
-```typescript
-projects: [
-  {
-    name: "Project Name",
-    description: "Brief description of what the project does and its impact",
-    link: "https://github.com/yourusername/project",
-    skills: ["React", "Node.js", "AWS"], // Technologies used
-  }
-]
-```
-
-#### Experience
-```typescript
-experience: [
-  {
-    company: "Company Name",
-    title: "Your Job Title",
-    dateRange: "Jan 2022 - Present",
-    bullets: [
-      "Led development of microservices architecture serving 1M+ users",
-      "Reduced API response times by 40% through optimization",
-      "Mentored team of 5 junior developers",
-    ],
-  }
-]
-```
-
-#### Education
-```typescript
-education: [
-  {
-    school: "University Name",
-    degree: "Bachelor of Science in Computer Science",
-    dateRange: "2014 - 2018",
-    achievements: [
-      "Graduated Magna Cum Laude with 3.8 GPA",
-      "Dean's List all semesters",
-      "President of Computer Science Club"
-    ]
-  }
-]
-```
-
-### Icons
-
-The template uses [Tabler Icons](https://tabler.io/icons) for all icons. If you wish to add more icons and have it look consistent with what's already there, you can browse through their extensive icon library.
-
-## Project Structure
-
-```
-devportfolio/
-├── public/
-│   └── favicon.svg          # Site favicon
-├── src/
-│   ├── components/          # Astro components
-│   │   ├── About.astro      # About section
-│   │   ├── Education.astro  # Education section
-│   │   ├── Experience.astro # Work experience section
-│   │   ├── Footer.astro     # Site footer
-│   │   ├── Header.astro     # Navigation header
-│   │   ├── Hero.astro       # Hero/intro section
-│   │   └── Projects.astro   # Projects showcase
-│   ├── pages/
-│   │   └── index.astro      # Main page layout
-│   ├── styles/
-│   │   └── global.css       # Global styles
-│   └── config.ts            # Site configuration
-├── astro.config.mjs         # Astro configuration
-├── package.json             # Project dependencies
-├── tailwind.config.js       # Tailwind configuration
-└── tsconfig.json            # TypeScript configuration
-```
-
-## Local Development
-
-If you'd like to run it locally:
-
-```
-git clone https://github.com/RyanFitzgerald/devportfolio.git
-cd devportfolio
-npm install
-```
-
-After that, start up the Astro dev server with:
-
-```
+```sh
+npm ci
 npm run dev
 ```
 
-## Deployment
+Open the local URL printed by Astro. Other commands:
 
-The template can be deployed to any static hosting service easily (and in most cases, completely free). Here are some options:
+| Command           | Purpose                                                             |
+| ----------------- | ------------------------------------------------------------------- |
+| `npm run build`   | Generate the static production site in `dist/`.                     |
+| `npm run preview` | Serve the production build locally after building.                  |
+| `npm run check`   | Check Astro and TypeScript diagnostics.                             |
+| `npm test`        | Rebuild the HTML fixture, then run the happy-dom interaction tests. |
 
-- To deploy with Netlify, [click here](https://docs.astro.build/en/guides/deploy/netlify/).
-- To deploy with Vercel, [click here](https://docs.astro.build/en/guides/deploy/vercel/).
-- To deploy with GitHub Pages, [click here](https://docs.astro.build/en/guides/deploy/github/).
-- To deploy with Cloudflare Pages, [click here](https://docs.astro.build/en/guides/deploy/cloudflare/).
-- To deploy with Render, [click here](https://docs.astro.build/en/guides/deploy/render/).
+## Edit content
 
-Want to deploy somewhere else? Find more guides [here](https://docs.astro.build/en/guides/deploy/).
+All personal text, contact details, page title and description, learning topics, and future entries live in **`src/config.ts`**. The exported `sections` list defines the six navigation labels, IDs, and icons. Keep those IDs in sync with the corresponding dialog content if changing the section structure.
 
-## Changelog
+`projects` and `achievements` start as empty arrays. Their dialogs display “Coming soon” until an entry is added; that text never appears on a closed card.
 
-To view the changelog, see CHANGELOG.md.
+Both arrays accept the same entry shape:
 
-## License
+```ts
+{
+  title: string;
+  description: string;
+  url?: string;
+  tags?: string[];
+}
+```
 
-This project is fully and completely MIT. See LICENSE.md.
+To add an entry, replace an empty array with verified content. For example, edit this placeholder before using it:
 
-## Questions?
+```ts
+projects: [
+  {
+    title: "Replace with a project title",
+    description: "Replace with an accurate description of the project.",
+    // url: add a working project URL if available,
+    // tags: add relevant topics if useful,
+  },
+] as PortfolioEntry[],
+```
 
-Feel free to reach out on [X (Twitter)](https://x.com/rfitzio) if you have any questions or need help.
+Use the same structure for `achievements`. Omit `url` and `tags` when unnecessary. Avoid adding unverified experience or qualifications.
+
+The ivory/orange palette, charcoal-backed glass surfaces, layout, responsive rules, and motion settings are in **`src/styles/global.css`**. Original line icons are in **`src/components/Icon.astro`**. The favicon is **`public/favicon.svg`**. The sharing artwork is defined in **`scripts/generate-social-card.mjs`**, which reads the name and wordmark from the same config and generates **`public/social-card.svg`** and **`public/social-card.png`**. Content edits appear in the sharing image on the next `npm run build`; run `node scripts/generate-social-card.mjs` to regenerate it independently.
+
+## Controls and accessibility
+
+- Scroll over the ring to rotate (down advances, up goes back). Small trackpad movements accumulate; one continuous gesture advances at most one card, rearming after 220 ms without wheel input. Browser zoom, reduced-motion page scrolling, and open dialogs keep their normal scroll behavior.
+- Drag horizontally or swipe to rotate; vertical touch gestures remain available for page scrolling.
+- Use the previous/next buttons or position indicators to select a card.
+- Use Left/Right arrows while focused within the carousel. Home/End select its first/last card.
+- Click a card, or activate it with Enter/Space, to open its section. Dragging does not open a dialog.
+- Use the labelled close button or Escape to close. Focus returns to the originating card, or to the compact menu’s summary when opened through that menu.
+- Native modal dialogs keep background content inactive while open. Long content scrolls inside the dialog.
+- Reduced-motion preferences remove unnecessary transitions and replace the ring with a simple grid.
+
+## Verify changes
+
+```sh
+npm run check
+npm test
+```
+
+The happy-dom tests exercise DOM interactions and content contracts. They do **not** verify browser rendering, native modal focus trapping, real touch input, or visual overflow.
+
+Before publishing, review the site in a browser at desktop and mobile widths:
+
+- Check the 3D ring, readable card labels, mobile layout, and absence of horizontal page overflow.
+- Try dragging versus clicking, touch swiping, previous/next buttons, indicators, and keyboard arrows.
+- Open every section with both pointer and keyboard input. Check focus trapping, close-button and Escape behavior, focus restoration, and scrolling within a long dialog.
+- Enable reduced motion and confirm that all sections remain reachable in the static grid and compact menu.
+- Check the email and Instagram destinations, visible keyboard focus, and text readability.
+
+## Deploy
+
+Publishing is a separate step; the implementation does not deploy automatically. Astro builds a static site that can be hosted by any service that serves `dist/`.
+
+Before a production build, set **`PUBLIC_SITE_URL`** to the final HTTPS site URL, including a trailing slash and any deployment subpath:
+
+```sh
+PUBLIC_SITE_URL=https://example.com/portfolio/ npm run build
+```
+
+Replace that example with the actual destination. The Astro configuration uses this value for its site origin and base path; page metadata uses it for canonical and absolute social-image URLs. For a site at the domain root, use a URL such as `https://example.com/`. Keep local development unset unless testing a base path.
+
+Configure the hosting service’s install command as `npm ci`, build command as `npm run build`, output directory as `dist`, and Node version as 24.12 or newer in the 24 LTS line. Supply `PUBLIC_SITE_URL` in that service’s build environment. For repository subpath hosting, ensure the configured URL includes that subpath. Rebuild after changing the deployment URL or content.
+
+## Licence
+
+This project retains the original MIT licence and Ryan Fitzgerald’s copyright notice in **`LICENSE.md`**. Preserve that notice when redistributing the source or substantial portions of it.
+
+## Glass and text effects
+
+Fine-pointer hover lifts a card 10px using the independent CSS `translate` property, preserving its 3D carousel transform. Hover is disabled during dragging, modal dialogs, touch-only input, and reduced motion. Smoked charcoal uses 32px backdrop blur and 120% saturation, with an opaque gradient fallback.
+
+Dialog body paragraphs type once per opening at about 40 characters per second. Headings, the close control, and contact links appear immediately. **Show all** skips typing without losing focus; the full paragraphs remain available to screen readers through a static accessible copy. Typing stops on close or teardown and finishes immediately if reduced motion is enabled. Space for the full text is reserved to avoid changing dialog height while typing.

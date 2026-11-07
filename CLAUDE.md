@@ -1,64 +1,71 @@
-# CLAUDE.md
+# Repository guidance
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Purpose and stack
 
-## Project Overview
+This repository contains Mohammed Siraj uddin’s personal portfolio. It uses Astro, Tailwind CSS v4 through `@tailwindcss/vite`, TypeScript, native HTML dialogs, and CSS 3D transforms. Keep the existing framework and lightweight client-side approach.
 
-This is a modern, minimalist portfolio template built with Astro and Tailwind CSS v4. It's designed to be easily customizable through a single configuration file while maintaining a clean, professional appearance.
+Use Node.js 24.12 or newer in the Node 24 LTS line. Tests import TypeScript directly through Node.
 
-## Tech Stack
+## Commands
 
-- **Astro**: Static site generator
-- **Tailwind CSS v4**: Utility-first CSS framework using the new @tailwindcss/vite plugin
-- **TypeScript**: For type-safe configuration
-- **Tabler Icons**: Icon library
-
-## Development Commands
-
-```bash
-npm run dev       # Start development server
-npm run build     # Build for production
-npm run preview   # Preview production build
+```sh
+npm ci             # Install the locked dependencies
+npm run dev        # Start the Astro development server
+npm run build      # Build the static site into dist/
+npm run preview    # Preview an existing production build
+npm run check      # Check Astro and TypeScript
+npm test           # Rebuild the fixture and run happy-dom interaction tests
 ```
 
-## Architecture
+Run relevant checks after changes. The DOM tests cannot establish that layout, native dialog focus trapping, touch gestures, or visual overflow work in a browser. Report the actual verification performed and any browser-review limits.
 
-The project follows a component-based architecture with all customization centralized in `src/config.ts`:
+## Active architecture
 
-- **Components** (`src/components/`): Individual Astro components for each section (Hero, About, Projects, Experience, Education, Header, Footer)
-- **Main Layout** (`src/pages/index.astro`): Single-page layout that imports all components
-- **Configuration** (`src/config.ts`): Single source of truth for all content and customization
+- `src/config.ts`: the single source for personal content, metadata text, contact details, learning topics, navigation labels, and typed future entries.
+- `src/pages/index.astro`: the page document, metadata, header, carousel controls, compact section menu, and dialog composition.
+- `src/components/SectionDialogs.astro`: server-rendered content for the six native dialogs.
+- `src/components/Icon.astro`: lightweight SVG line icons.
+- `src/scripts/typewriter.ts`: visual-only dialog typing with a complete accessible source, Show all, and cancellable timers.
+- `src/scripts/portfolio.ts`: carousel selection, pointer/keyboard input, dialog lifecycle, focus restoration, and reduced-motion handling.
+- `src/styles/global.css`: the ivory-and-burnt-orange palette, typography, glass surfaces, 3D layout, responsive mobile layout, focus states, and motion preferences.
+- `public/favicon.svg`: the favicon.
+- `scripts/generate-social-card.mjs`: original sharing artwork, with escaped name and wordmark read from `src/config.ts`; generates `public/social-card.svg` and `public/social-card.png` before each build.
+- `tests/portfolio.test.mjs`: happy-dom tests for the built HTML and interaction script.
+- `astro.config.mjs`: Astro/Tailwind configuration and production site/base-path settings derived from `PUBLIC_SITE_URL`.
 
-### Key Architectural Decisions
+Preserve a readable modern sans-serif aesthetic and the palette specified in the design. Keep personal content in the config rather than scattering it through components. Style changes belong in the stylesheet.
 
-1. **Single Configuration File**: All content is managed through `src/config.ts` to make customization simple
-2. **Conditional Rendering**: Sections automatically hide if their data is removed from the config
-3. **Component Independence**: Each section is a self-contained component that reads from the config
-4. **Accent Color System**: Single `accentColor` in config propagates throughout the site via CSS custom properties
+## Content contracts
 
-## Important Implementation Details
+The six section IDs are `introduction`, `about`, `achievements`, `projects`, `learning`, and `contact`. Each navigation entry maps to `section-{id}` and a corresponding native dialog. Keep navigation, dialog IDs, and interaction data attributes aligned.
 
-- The site uses Tailwind CSS v4 with the Vite plugin configuration
-- No linting or testing framework is currently configured
-- All components are in `.astro` format (not React/Vue/etc)
-- The project uses IBM Plex Mono font loaded from Google Fonts
-- Social links in the config are all optional and will conditionally render
+Closed cards display only their title and matching icon. Biographies, descriptions, previews, and “Coming soon” belong only inside activated section dialogs.
 
-## Working with Components
+`siteConfig.projects` and `siteConfig.achievements` use `PortfolioEntry[]` with these fields:
 
-When modifying components:
-1. Components read directly from the imported `siteConfig` object
-2. Use Tailwind utility classes for styling
-3. Maintain the existing monospace font aesthetic
-4. Use Tabler Icons for consistency with existing icons
+```ts
+interface PortfolioEntry {
+  title: string;
+  description: string;
+  url?: string;
+  tags?: string[];
+}
+```
 
-## Configuration Structure
+Empty arrays retain a “Coming soon” state within their dialogs. Do not fabricate experience, projects, achievements, certificates, statistics, testimonials, social accounts, or a portrait. There is no certificates section. Preserve the supplied personal prose and working contact destinations unless the user requests edits.
 
-The `src/config.ts` exports a `siteConfig` object with these sections:
-- Basic info: name, title, description, accentColor
-- Social links: email, linkedin, twitter, github (all optional)
-- aboutMe: string
-- skills: string[]
-- projects: array of {name, description, link, skills}
-- experience: array of {company, title, dateRange, bullets}
-- education: array of {school, degree, dateRange, achievements}
+## Interaction contracts
+
+Keep rotation visitor-controlled; do not introduce automatic spinning. Preserve pointer dragging, touch swiping, previous/next controls, keyboard arrows, and clickable position indicators. Distinguish dragging from activation. Vertical touch scrolling must remain native.
+
+Dialogs need labelled close buttons, Escape support, focus management, focus restoration, and internally scrollable content. Pause carousel interaction while a dialog is open. Keep every section reachable through the compact section menu.
+
+Honor `prefers-reduced-motion` with a simple static navigation grid and minimal motion. Keep mobile cards readable, controls comfortable to touch, and page width within the viewport. Use real HTML for all labels, controls, and section content.
+
+## Build and deployment
+
+The build regenerates the sharing image from the content config, then outputs the static site to `dist/`. Run `node scripts/generate-social-card.mjs` to regenerate the image independently; edit its artwork in the script rather than its generated files. Publishing is a separate action. Before a production build, set `PUBLIC_SITE_URL` to the final HTTPS URL, including a trailing slash and any deployment subpath. This configures the Astro origin/base and absolute canonical/social metadata. Preserve base-path-aware asset links.
+
+## Licence
+
+Keep `LICENSE.md` intact, including the original MIT licence and Ryan Fitzgerald’s copyright notice. Removing template-author content from the rendered portfolio does not remove licence obligations.

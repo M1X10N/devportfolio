@@ -1,0 +1,143 @@
+---
+import { sections, siteConfig } from "../config";
+import Icon from "./Icon.astro";
+---
+
+{sections.map((section, index) => (
+  <dialog
+    id={`section-${section.id}`}
+    class="section-dialog"
+    aria-labelledby={`title-${section.id}`}
+    data-section-dialog
+  >
+    <div class="dialog-shell">
+      <div class="dialog-topline">
+        <span class="eyebrow">
+          SECTION {String(index + 1).padStart(2, "0")} / 06
+        </span>
+        <div class="dialog-tools">
+          <button type="button" class="show-all-button" data-show-all hidden>
+            Show all
+          </button>
+          <button
+            type="button"
+            class="dialog-close"
+            data-close-dialog
+            aria-label={`Close ${section.title}`}
+            autofocus
+          >
+            <Icon name="close" size={22} />
+          </button>
+        </div>
+      </div>
+      <div class="dialog-scroll" tabindex="0">
+        <div class="dialog-heading">
+          <span class="dialog-icon">
+            <Icon name={section.icon} size={32} />
+          </span>
+          <h2 id={`title-${section.id}`}>{section.title}</h2>
+        </div>
+
+        {section.id === "introduction" && (
+          <div class="section-content">
+            <p class="dialog-name">{siteConfig.name}</p>
+            <p class="dialog-prose" data-typewriter>
+              {siteConfig.introduction}
+            </p>
+          </div>
+        )}
+        {section.id === "about" && (
+          <div class="section-content">
+            <p class="dialog-prose" data-typewriter>
+              {siteConfig.aboutMe}
+            </p>
+          </div>
+        )}
+        {(section.id === "projects" || section.id === "achievements") && (
+          <div class="section-content">
+            {siteConfig[section.id].length === 0 ? (
+              <p class="empty-state" data-typewriter>
+                {siteConfig.emptyState}
+              </p>
+            ) : (
+              <div class="entry-list">
+                {siteConfig[section.id].map((entry) => (
+                  <article class="content-entry reveal">
+                    <h3>
+                      {entry.url ? (
+                        <a
+                          href={entry.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {entry.title}
+                          <Icon name="arrow-up-right" size={18} />
+                        </a>
+                      ) : (
+                        entry.title
+                      )}
+                    </h3>
+                    <p data-typewriter>{entry.description}</p>
+                    {entry.tags && entry.tags.length > 0 && (
+                      <ul class="entry-tags" aria-label="Topics">
+                        {entry.tags.map((tag) => (
+                          <li>{tag}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {section.id === "learning" && (
+          <div class="section-content">
+            <p class="learning-intro" data-typewriter>
+              {siteConfig.learningHeading}
+            </p>
+            <div class="learning-list">
+              {siteConfig.learningTopics.map((topic, topicIndex) => (
+                <article class="learning-topic reveal">
+                  <span class="topic-number" aria-hidden="true">
+                    {String(topicIndex + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3>{topic.title}</h3>
+                    <p data-typewriter>{topic.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        )}
+        {section.id === "contact" && (
+          <div class="section-content contact-list">
+            <a class="contact-link" href={`mailto:${siteConfig.social.email}`}>
+              <span>
+                <span class="contact-label">EMAIL</span>
+                <span class="contact-value">{siteConfig.social.email}</span>
+              </span>
+              <Icon name="arrow-up-right" size={24} />
+            </a>
+            <a
+              class="contact-link"
+              href={siteConfig.social.instagram.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span>
+                <span class="contact-label">INSTAGRAM</span>
+                <span class="contact-value">
+                  {siteConfig.social.instagram.handle}
+                </span>
+              </span>
+              <Icon name="arrow-up-right" size={24} />
+              <span class="sr-only">(opens in a new tab)</span>
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  </dialog>
+))}
