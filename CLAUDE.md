@@ -32,7 +32,7 @@ Run relevant checks after changes. The DOM tests cannot establish that layout, n
 - `tests/portfolio.test.mjs`: happy-dom tests for the built HTML and interaction script.
 - `astro.config.mjs`: Astro/Tailwind configuration and production site/base-path settings derived from `PUBLIC_SITE_URL`.
 
-Preserve a readable monospace aesthetic and the palette specified in the design. Keep personal content in the config rather than scattering it through components. Style changes belong in the stylesheet.
+Preserve a readable modern sans-serif aesthetic and the palette specified in the design. Keep personal content in the config rather than scattering it through components. Style changes belong in the stylesheet.
 
 ## Content contracts
 

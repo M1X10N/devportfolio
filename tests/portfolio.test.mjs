@@ -392,3 +392,107 @@ test("all six sections open, empty states stay inside dialogs, and contact URLs 
     );
   });
 });
+
+function wheel(page, target, deltaY, extra = {}) {
+  const event = new page.window.WheelEvent("wheel", {
+    bubbles: true,
+    cancelable: true,
+    deltaY,
+    ...extra,
+  });
+  // happy-dom's WheelEvent extends UIEvent instead of MouseEvent and omits
+  // modifier fields; provide the native ctrlKey field for the zoom regression.
+  Object.defineProperty(event, "ctrlKey", { value: extra.ctrlKey ?? false });
+  target.dispatchEvent(event);
+  return event;
+}
+
+test("wheel advances once per burst, suppresses trailing clicks, and reverses after idle", async () => {
+  await withFixture({}, async (page) => {
+    assert.equal(wheel(page, page.cards[0], 120).defaultPrevented, true);
+    assert.equal(page.active(), 1);
+    for (const delta of [120, 90, 40, 12, 2]) wheel(page, page.stage, delta);
+    assert.equal(page.active(), 1, "momentum cannot skip additional cards");
+    page.click(page.cards[1]);
+    assert.equal(page.document.querySelectorAll("dialog[open]").length, 0);
+    await delay(250);
+    wheel(page, page.stage, -120);
+    assert.equal(page.active(), 0, "upward wheel moves backward");
+    await delay(250);
+    wheel(page, page.stage, -120);
+    assert.equal(page.active(), 5, "backward wraps to last card");
+  });
+});
+
+test("small trackpad deltas accumulate and direction changes reset accumulation", async () => {
+  await withFixture({}, (page) => {
+    for (let i = 0; i < 7; i++) wheel(page, page.stage, 5);
+    assert.equal(page.active(), 0);
+    wheel(page, page.stage, -5);
+    assert.equal(page.active(), 0);
+    for (let i = 0; i < 7; i++) wheel(page, page.stage, -5);
+    assert.equal(page.active(), 5);
+    for (let i = 0; i < 20; i++) wheel(page, page.stage, -2);
+    assert.equal(page.active(), 5);
+  });
+});
+
+test("line, page, and horizontal wheel deltas are normalized", async () => {
+  for (const options of [
+    { deltaY: 3, deltaMode: 1 },
+    { deltaY: 1, deltaMode: 2 },
+    { deltaY: 0, deltaX: 80 },
+  ]) {
+    await withFixture({}, (page) => {
+      wheel(page, page.stage, options.deltaY, options);
+      assert.equal(page.active(), 1);
+    });
+  }
+});
+
+test("wheel leaves page, modal content, zoom, and reduced-motion scrolling alone", async () => {
+  await withFixture({}, (page) => {
+    assert.equal(wheel(page, page.document.body, 100).defaultPrevented, false);
+    assert.equal(
+      wheel(page, page.stage, 100, { ctrlKey: true }).defaultPrevented,
+      false,
+    );
+    page.click(page.cards[0]);
+    const dialog = page.document.getElementById("section-introduction");
+    assert.equal(
+      wheel(page, dialog.querySelector(".dialog-scroll"), 100).defaultPrevented,
+      false,
+    );
+    assert.equal(wheel(page, page.stage, 100).defaultPrevented, false);
+    assert.equal(page.active(), 0);
+  });
+  await withFixture({ reducedMotion: true }, (page) => {
+    assert.equal(wheel(page, page.stage, 100).defaultPrevented, false);
+    assert.equal(page.active(), 0);
+    page.click(page.cards[3]);
+    assert.equal(page.document.getElementById("section-projects").open, true);
+  });
+});
+
+test("ring geometry keeps panel yaw readable and removes rear face flipping", async () => {
+  await withFixture({}, (page) => {
+    for (let step = 0; step < 6; step++) {
+      page.key("ArrowRight");
+      const seen = new Set();
+      for (const card of page.cards) {
+        const x = Number(card.style.getPropertyValue("--ring-x"));
+        const depth = Number(card.style.getPropertyValue("--depth"));
+        const yaw = parseFloat(card.style.getPropertyValue("--panel-yaw"));
+        assert.ok(Math.abs(yaw) <= 28);
+        assert.ok(Math.abs(x * x + depth * depth - 1) < 0.001);
+        seen.add(`${x},${depth}`);
+        assert.equal(card.style.getPropertyValue("--face-flip"), "");
+      }
+      assert.equal(seen.size, 6);
+    }
+    assert.doesNotMatch(
+      page.document.body.textContent,
+      /A SPACE FOR IDEAS|Six chapters|EXPLORE THE ORBIT/,
+    );
+  });
+});

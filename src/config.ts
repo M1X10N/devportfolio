@@ -27,7 +27,7 @@ export const siteConfig = {
   title: "Siraj — Personal Portfolio",
   description:
     "The personal portfolio of Mohammed Siraj uddin. Explore what Siraj is learning, creating, and achieving in coding and cybersecurity.",
-  accentColor: "#8B5CF6",
+  accentColor: "#9146FF",
   introduction:
     "Hi everyone, I’m Siraj! I’m a vibecoder who started coding out of personal interest and got into turning ideas into websites. I enjoy experimenting, figuring things out, and learning as I build. I game on the side, and I’m interested in making money and turning my skills into opportunities. This portfolio is where I’ll share what I’m learning, creating, and achieving along the way.",
   aboutMe:

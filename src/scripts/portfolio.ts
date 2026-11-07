@@ -33,6 +33,10 @@ export function initPortfolio(
   let selected = 0;
   let rotation = 0;
   let suppressedUntil = 0;
+  // A gesture ends only after wheel events (including momentum) go quiet.
+  let wheelLastAt = -Infinity;
+  let wheelTotal = 0;
+  let wheelLatched = false;
   let activeDialog: HTMLDialogElement | null = null;
   let opener: HTMLElement | null = null;
   let closeTimer: number | undefined;
@@ -60,17 +64,19 @@ export function initPortfolio(
   const paused = () => activeDialog !== null;
 
   function paint(dragAngle = 0) {
-    ring!.style.setProperty("--rotation", `${rotation + dragAngle}deg`);
     cards.forEach((card, index) => {
       const offset =
         normalize(index - selected + Math.floor(count / 2)) -
         Math.floor(count / 2);
-      const depth = Math.cos(
-        ((index * angle + rotation + dragAngle) * Math.PI) / 180,
-      );
+      const radians = ((index * angle + rotation + dragAngle) * Math.PI) / 180;
+      const depth = Math.cos(radians);
+      const horizontal = Math.sin(radians);
+      // Positions follow a real ring; bounded panel yaw keeps neighbours readable.
+      card.style.setProperty("--ring-x", horizontal.toFixed(4));
+      card.style.setProperty("--panel-yaw", `${-horizontal * 28}deg`);
       card.style.setProperty("--offset", String(offset));
       card.style.setProperty("--depth", depth.toFixed(4));
-      card.style.setProperty("--face-flip", depth < 0 ? "180deg" : "0deg");
+
       card.classList.toggle("is-active", index === selected);
       // Offscreen mobile cards stay reachable by arrows and the section menu,
       // without leaving hidden buttons in the sequential Tab order.
@@ -122,6 +128,9 @@ export function initPortfolio(
 
   function syncMotion() {
     finishGesture(true);
+    wheelTotal = 0;
+    wheelLatched = false;
+    wheelLastAt = -Infinity;
     carousel.classList.toggle("is-reduced-motion", reduced());
     if (reduced()) {
       stage!.setAttribute("aria-label", "Portfolio sections");
@@ -172,6 +181,43 @@ export function initPortfolio(
       .querySelector<HTMLElement>("[data-close-dialog]")
       ?.focus({ preventScroll: true });
   }
+
+  on(
+    stage,
+    "wheel",
+    ((event: WheelEvent) => {
+      // Preserve browser zoom, section scrolling, and reduced-motion page scrolling.
+      if (paused() || reduced() || event.ctrlKey || !event.cancelable) return;
+      const raw =
+        Math.abs(event.deltaY) >= Math.abs(event.deltaX)
+          ? event.deltaY
+          : event.deltaX;
+      if (!Number.isFinite(raw) || raw === 0) return;
+      event.preventDefault();
+      const now = Date.now();
+      suppressedUntil = now + 450;
+      if (now - wheelLastAt > 220) {
+        wheelTotal = 0;
+        wheelLatched = false;
+      }
+      wheelLastAt = now;
+      if (gesture || wheelLatched) return;
+      const unit =
+        event.deltaMode === 1
+          ? 16
+          : event.deltaMode === 2
+            ? Math.max(stage!.clientHeight, 320)
+            : 1;
+      const delta = Math.max(-160, Math.min(160, raw * unit));
+      if (Math.sign(delta) !== Math.sign(wheelTotal)) wheelTotal = 0;
+      wheelTotal += delta;
+      if (Math.abs(wheelTotal) < 40) return;
+      select(selected + Math.sign(wheelTotal));
+      wheelLatched = true;
+      wheelTotal = 0;
+    }) as EventListener,
+    { passive: false },
+  );
 
   on(stage, "pointerdown", ((event: PointerEvent) => {
     if (

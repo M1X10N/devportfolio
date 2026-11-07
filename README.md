@@ -1,6 +1,6 @@
 # Siraj’s portfolio
 
-A personal portfolio for Mohammed Siraj uddin, built with Astro, Tailwind CSS v4, TypeScript, and lightweight CSS 3D transforms. Six title-and-icon cards open the introduction, about, achievements, projects, learning, and contact sections in native glass dialogs.
+A personal portfolio for Mohammed Siraj uddin, built with Astro, Tailwind CSS v4, TypeScript, and lightweight CSS 3D transforms and opaque charcoal panels. Six title-and-icon cards open the introduction, about, achievements, projects, learning, and contact sections in native glass dialogs.
 
 The desktop carousel rotates only when a visitor interacts with it. Mobile uses a simpler swipeable layout. Visitors who prefer reduced motion get a static section grid. A compact section menu provides another route to every dialog.
 
@@ -58,6 +58,7 @@ The palette, glass surfaces, layout, responsive rules, and motion settings are i
 
 ## Controls and accessibility
 
+- Scroll over the ring to rotate (down advances, up goes back). Small trackpad movements accumulate; one continuous gesture advances at most one card, rearming after 220 ms without wheel input. Browser zoom, reduced-motion page scrolling, and open dialogs keep their normal scroll behavior.
 - Drag horizontally or swipe to rotate; vertical touch gestures remain available for page scrolling.
 - Use the previous/next buttons or position indicators to select a card.
 - Use Left/Right arrows while focused within the carousel. Home/End select its first/last card.
